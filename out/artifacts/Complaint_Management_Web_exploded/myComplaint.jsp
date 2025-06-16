@@ -1,6 +1,7 @@
 <%@ page import="org.example.entity.Complaints" %>
 <%@ page import="java.util.List" %>
-<%@ page import="org.example.dto.ComplaintsDTO" %><%--
+<%@ page import="org.example.dto.ComplaintsDTO" %>
+<%@ page import="java.time.LocalDate" %><%--
   Created by IntelliJ IDEA.
   User: Nethushi
   Date: 6/13/2025
@@ -762,56 +763,96 @@
       <div class="complaints-grid" id="complaintsGrid">
         <%
           List<ComplaintsDTO> complaints = (List<ComplaintsDTO>) request.getAttribute("complaints");
-          System.out.println(complaints.size());
-          if (complaints.size() == 0) {
-            System.out.println("empty");
+          if (complaints == null || complaints.isEmpty()) {
         %>
-        <h1>No Complaints Found</h1>
+        <div class="empty-state" id="emptyState">
+          <div class="empty-icon">📭</div>
+          <h3 class="empty-title">No Complaints Found</h3>
+          <p class="empty-text">You haven't submitted any complaints yet.<br>Click "New Complaint" to get started.</p>
+          <button class="add-btn" onclick="window.location.href='submitComplaint.jsp'">
+            ➕ Submit Your First Complaint
+          </button>
+        </div>
         <%
-        }else{
+        } else {
           for (ComplaintsDTO complaint : complaints) {
-            System.out.println("kkkkkkkkkkkkkk");
+            String statusClass = "";
+            switch (complaint.getStatus().toUpperCase()) {
+              case "PENDING":
+                statusClass = "status-pending";
+                break;
+              case "IN_PROGRESS":
+                statusClass = "status-in-progress";
+                break;
+              case "RESOLVED":
+                statusClass = "status-resolved";
+                break;
+              case "REJECTED":
+                statusClass = "status-rejected";
+                break;
+            }
         %>
-        <!-- Sample Card 1 - Pending -->
+        <!-- Complaint Card -->
         <div class="complaint-card">
           <div class="complaint-header">
             <div>
-              <h4 class="complaint-title"><%=complaint.getTitle()%></h4>
-              <div class="complaint-id"><%=complaint.getComplaint_id()%></div>
+              <h4 class="complaint-title"><%= complaint.getTitle() %></h4>
+              <div class="complaint-id"><%= complaint.getComplaint_id() %></div>
             </div>
-            <span class="status-badge status-pending">
-                    <span>⏳</span>
-                    <span><%=complaint.getStatus()%></span>
-                </span>
+            <span class="status-badge <%= statusClass %>">
+        <span>
+          <%
+            switch (complaint.getStatus().toUpperCase()) {
+              case "PENDING":
+                System.out.println("⏳");
+                break;
+              case "IN_PROGRESS":
+                System.out.println("🔄");
+                break;
+              case "RESOLVED":
+                System.out.println("✅");
+                break;
+              case "REJECTED":
+                System.out.println("❌");
+                break;
+            }
+          %>
+        </span>
+        <span><%= complaint.getStatus() %></span>
+      </span>
           </div>
           <div class="complaint-meta">
             <div class="meta-item">
               <span>📅</span>
-              <span>Dec 15, 2024</span>
+              <span><%= LocalDate.now()%></span>
             </div>
             <div class="meta-item">
               <span>⚡</span>
-              <span class="priority-high">🔴 <%=complaint.getPriority()%></span>
+              <span class="priority-<%= complaint.getPriority().toLowerCase() %>">
+          <%= complaint.getPriority().equalsIgnoreCase("High") ? "🔴" :
+                  complaint.getPriority().equalsIgnoreCase("Medium") ? "🟡" : "🟢" %>
+          <%= complaint.getPriority() %>
+        </span>
             </div>
           </div>
           <div class="complaint-description">
-            <%=complaint.getDescription()%>
+            <%= complaint.getDescription() %>
+          </div>
+          <div class="admin-remarks" style="display: none;">
+            <%= complaint.getAdminRemark() != null ? complaint.getAdminRemark() : "No admin remarks available." %>
           </div>
           <div class="complaint-actions">
-            <button class="action-btn btn-view" onclick="viewComplaint(<%=complaint.getComplaint_id()%>)">
+            <button class="action-btn btn-view" onclick="viewComplaint(<%= complaint.getComplaint_id() %>)">
               👁️ View
             </button>
             <%
-              // Only show edit and delete buttons if status is not "Resolved"
-              if (!"Resolved".equals(complaint.getStatus())) {
-
-                System.out.println(complaint.getStatus() + " " + "Resolved");
+              if (!"RESOLVED".equalsIgnoreCase(complaint.getStatus()) && !"REJECTED".equalsIgnoreCase(complaint.getStatus())) {
             %>
-            <button class="action-btn btn-edit" onclick="editComplaint(<%=complaint.getComplaint_id()%>)">
+            <button class="action-btn btn-edit" onclick="editComplaint(<%= complaint.getComplaint_id() %>)">
               ✏️ Edit
             </button>
             <form action="deleteComplaint" method="post">
-              <input type="hidden" name="complaint_id" value="<%=complaint.getComplaint_id()%>">
+              <input type="hidden" name="complaint_id" value="<%= complaint.getComplaint_id() %>">
               <button type="submit" class="action-btn btn-delete" name="deleteComplaint">
                 🗑️ Delete
               </button>
@@ -825,16 +866,6 @@
             }
           }
         %>
-      </div>
-
-      <!-- Empty State -->
-      <div class="empty-state" id="emptyState" style="display: none;">
-        <div class="empty-icon">📭</div>
-        <h3 class="empty-title">No Complaints Found</h3>
-        <p class="empty-text">You haven't submitted any complaints yet.<br>Click "New Complaint" to get started.</p>
-        <button class="add-btn" onclick="window.location.href='submitComplaint.jsp'">
-          ➕ Submit Your First Complaint
-        </button>
       </div>
     </div>
 
@@ -912,13 +943,13 @@
         <span class="view-label">Priority:</span>
         <div class="view-value" id="viewPriority"></div>
       </div>
-      <div id="adminResponseSection" style="display: none;">
+      <div id="adminResponseSection">
         <div class="admin-response">
           <div class="admin-response-label">
             <span>📝</span>
             <span>Admin Remark:</span>
           </div>
-          <div class="admin-response-text" id="viewAdminResponse"></div>
+          <textarea class="form-textarea" id="viewAdminResponse" readonly></textarea>
         </div>
       </div>
     </div>

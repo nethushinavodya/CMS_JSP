@@ -1,42 +1,3 @@
-// Sample complaint data - replace with actual data from server
-const complaintsData = [
-    {
-        id: 1,
-        title: "Workplace Harassment Issue",
-        date: "2025-06-10",
-        status: "PENDING",
-        priority: "high",
-        description: "I am experiencing inappropriate behavior from a colleague that is making me uncomfortable in the workplace. This includes unwanted comments and gestures that are affecting my ability to work effectively. I have tried to address this directly but the behavior continues.",
-        remarks: "Initial complaint received, investigation pending. HR department has been notified."
-    },
-    {
-        id: 2,
-        title: "Office Equipment Malfunction",
-        date: "2025-06-09",
-        status: "IN_PROGRESS",
-        priority: "medium",
-        description: "The computer workstation in my cubicle has been experiencing frequent crashes and slow performance. This is significantly impacting my productivity and ability to meet deadlines. The issue has persisted for over a week despite basic troubleshooting attempts.",
-        remarks: "Equipment replacement ordered, expected delivery in 3 days. IT department assigned to resolve."
-    },
-    {
-        id: 3,
-        title: "Break Room Cleanliness",
-        date: "2025-06-08",
-        status: "RESOLVED",
-        priority: "low",
-        description: "The break room has been consistently dirty with dishes left unwashed, spills not cleaned up, and the refrigerator containing expired items. This creates an unpleasant environment and potential health concerns.",
-        remarks: "Cleaning schedule updated, additional cleaning staff assigned. Issue resolved."
-    },
-    {
-        id: 4,
-        title: "Unsafe Working Conditions",
-        date: "2025-06-12",
-        status: "PENDING",
-        priority: "high",
-        description: "There are exposed electrical wires in the storage area that pose a serious safety risk. Additionally, the emergency exit is partially blocked by equipment. These conditions could lead to accidents or impede evacuation in case of emergency.",
-        remarks: ""
-    }
-];
 
 // Initialize the page
 document.addEventListener('DOMContentLoaded', function() {
@@ -72,37 +33,67 @@ function setupEventListeners() {
         }
     });
 }
-
-// View complaint function
 function viewComplaint(id) {
-    const complaint = complaintsData.find(c => c.id === id);
-    if (!complaint) return;
+    const card = document.querySelector(`.complaint-card[data-id='${id}']`);
+    if (!card) return;
 
-    // Populate view modal
-    document.getElementById('viewTitle').textContent = complaint.title;
-    document.getElementById('viewDate').textContent = complaint.date;
-    document.getElementById('viewStatus').textContent = complaint.status.replace('_', ' ');
-    document.getElementById('viewPriority').textContent = complaint.priority.charAt(0).toUpperCase() + complaint.priority.slice(1);
-    document.getElementById('viewDescription').textContent = complaint.description;
-    document.getElementById('viewRemarks').textContent = complaint.remarks || 'No remarks added yet.';
+    const title = card.querySelector('.complaint-title').textContent;
+    const status = card.getAttribute('data-status');
+    const priority = card.getAttribute('data-priority');
+    const description = card.getAttribute('data-description');
+    const date = card.querySelector('.complaint-date').textContent;
+    const remarks = card.querySelector('.admin-remarks')?.textContent || "No remarks added yet.";
 
+    // Set values into the view modal
+    document.getElementById('viewTitle').textContent = title;
+    document.getElementById('viewStatus').textContent = status.charAt(0) + status.slice(1).toLowerCase();
+    document.getElementById('viewPriority').textContent = priority.charAt(0).toUpperCase() + priority.slice(1);
+    document.getElementById('viewDescription').textContent = description;
+    document.getElementById('viewRemarks').textContent = remarks;
+    document.getElementById('viewDate').textContent = date;
+
+    // Store the current complaint id to be used when clicking "Edit from View"
+    document.getElementById('editForm').setAttribute('data-edit-id', id);
+
+    // Show the modal
     document.getElementById('viewModal').style.display = 'block';
 }
 
+function closeViewModal() {
+    document.getElementById('viewModal').style.display = 'none';
+}
+
+function openEditFromView() {
+    const id = document.getElementById('editForm').getAttribute('data-edit-id');
+    if (id) {
+        editComplaint(id);
+        closeViewModal();
+    }
+}
 // Edit complaint function
 function editComplaint(id) {
-    const complaint = complaintsData.find(c => c.id === id);
-    if (!complaint) return;
+    const card = document.querySelector(`.complaint-card[data-id='${id}']`);
+    if (!card) return;
 
-    // Populate edit modal
-    document.getElementById('complaintId').value = complaint.id;
-    document.getElementById('editTitle').value = complaint.title;
-    document.getElementById('complaintStatus').value = complaint.status;
-    document.getElementById('complaintRemarks').value = complaint.remarks;
+    const title = card.querySelector('.complaint-title').textContent;
+    const status = card.getAttribute('data-status');
+    const priority = card.getAttribute('data-priority');
+    const description = card.getAttribute('data-description');
+    const remarks = card.querySelector('.admin-remarks')?.textContent || "";
 
+    // Fill form fields
+    document.getElementById('complaintId').value = id;
+    document.getElementById('editTitle').value = title;
+    document.getElementById('complaintStatus').value = status;
+    document.getElementById('complaintRemarks').value = remarks;
+
+    // Show the modal
     document.getElementById('editModal').style.display = 'block';
 }
 
+function closeEditModal() {
+    document.getElementById('editModal').style.display = 'none';
+}
 // Handle edit form submission
 function handleEditSubmit(e) {
     e.preventDefault();

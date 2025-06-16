@@ -450,7 +450,7 @@
             <p class="card-description">
                 View, manage, and respond to all complaints submitted by employees. Track status and assign priority levels.
             </p>
-            <a href="allComplaint.jsp" class="card-action">
+            <a href="allComplaint" class="card-action">
                 👁️ View All Complaints
             </a>
         </div>

@@ -61,6 +61,8 @@ function saveEdit() {
 }
 
 // Function to open view modal
+// Function to open view modal
+// Function to open view modal
 function viewComplaint(complaintId) {
     // Find the complaint card by ID
     const card = Array.from(complaintsGrid.children).find(card =>
@@ -73,7 +75,8 @@ function viewComplaint(complaintId) {
         const description = card.querySelector('.complaint-description').textContent;
         const status = card.querySelector('.status-badge span:last-child').textContent;
         const date = card.querySelector('.meta-item span:last-child').textContent;
-        const priority = card.querySelector('.priority-high').textContent.replace('🔴 ', '');
+        const priority = card.querySelector(`.priority-${status.toLowerCase()}`)?.textContent.replace(/[\u{1F534}\u{1F7E1}\u{1F7E2}]/u, '').trim() || 'N/A';
+        const adminRemarks = card.querySelector('.admin-remarks')?.textContent.trim() || 'No admin remarks available.';
 
         // Populate view modal fields
         document.getElementById('viewId').textContent = complaintId;
@@ -82,16 +85,21 @@ function viewComplaint(complaintId) {
         document.getElementById('viewStatus').textContent = status;
         document.getElementById('viewDate').textContent = date;
         document.getElementById('viewPriority').textContent = priority;
+        document.getElementById('viewAdminResponse').textContent = adminRemarks;
 
-        // Hide admin response section (no admin response data in DOM)
-        document.getElementById('adminResponseSection').style.display = 'none';
+        // Show or hide admin response section based on whether remarks exist
+        const adminResponseSection = document.getElementById('adminResponseSection');
+        if (adminRemarks && adminRemarks !== 'No admin remarks available.') {
+            adminResponseSection.style.display = 'block';
+        } else {
+            adminResponseSection.style.display = 'none';
+        }
 
         viewModal.style.display = 'block';
     } else {
         alert('Complaint not found.');
     }
 }
-
 // Function to close view modal
 function closeViewModal() {
     viewModal.style.display = 'none';

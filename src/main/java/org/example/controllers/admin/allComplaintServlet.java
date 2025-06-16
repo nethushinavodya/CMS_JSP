@@ -22,6 +22,6 @@ public class allComplaintServlet extends HttpServlet {
         System.out.println("Servlet: Complaints = " + complaints);
 
         req.setAttribute("complaints", complaints);
-        req.getRequestDispatcher("/allComplaint.jsp").forward(req, resp);
+        req.getRequestDispatcher("allComplaint.jsp").forward(req, resp);
     }
 }
