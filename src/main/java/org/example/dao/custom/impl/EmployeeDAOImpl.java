@@ -1,6 +1,5 @@
 package org.example.dao.custom.impl;
 
-import jakarta.servlet.ServletContext;
 import org.example.config.FactoryConfiguration;
 import org.example.dao.custom.EmployeeDAO;
 import org.example.entity.Employee;
@@ -34,5 +33,27 @@ public class EmployeeDAOImpl implements EmployeeDAO {
         } else {
             return null;
         }
+    }
+
+    @Override
+    public List<Employee> getEmployeesByRole(String role) {
+        Session session = factoryConfiguration.getSession();
+        session.beginTransaction();
+        String sql = "FROM Employee WHERE role = :role";
+        List<Employee> employees = session.createQuery(sql, Employee.class)
+                .setParameter("role", role)
+                .getResultList();
+        session.getTransaction().commit();
+        return employees;
+    }
+
+    @Override
+    public boolean deleteAdmin(String username) {
+        Session session = factoryConfiguration.getSession();
+        session.beginTransaction();
+        String sql = "DELETE FROM Employee WHERE username = :username";
+        session.createQuery(sql).setParameter("username", username).executeUpdate();
+        session.getTransaction().commit();
+        return false;
     }
 }

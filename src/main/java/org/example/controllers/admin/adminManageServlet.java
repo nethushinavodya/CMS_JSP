@@ -8,10 +8,14 @@ import jakarta.servlet.http.*;
 import org.example.bo.BOFactory;
 import org.example.bo.custom.EmployeeBO;
 import org.example.dto.EmployeeDTO;
+import org.example.entity.Employee;
+
+import java.util.List;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.List;
 
 @WebServlet(name = "adminManageServlet", value = "/adminManage")
 @MultipartConfig(maxFileSize = 1024 * 1024 * 5) // max 5MB
@@ -60,6 +64,13 @@ public class adminManageServlet extends HttpServlet {
         } else {
             resp.sendRedirect("adminDashboard.jsp");
         }
+    }
 
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        List<Employee> adminList = employeeBO.getEmployeesByRole("Admin");
+        System.out.println(adminList.size());
+        req.setAttribute("adminList", adminList);
+        req.getRequestDispatcher("adminManage.jsp").forward(req, resp);
     }
 }

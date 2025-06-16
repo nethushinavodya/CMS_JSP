@@ -462,7 +462,7 @@
             <p class="card-description">
                 Add, remove, or modify administrator accounts. Control access levels and permissions for admin users.
             </p>
-            <a href="adminManage.jsp" class="card-action">
+            <a href="adminManage" class="card-action">
                 ⚙️ Manage Admins
             </a>
         </div>
