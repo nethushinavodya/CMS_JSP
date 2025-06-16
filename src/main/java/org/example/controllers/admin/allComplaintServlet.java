@@ -31,6 +31,10 @@ public class allComplaintServlet extends HttpServlet {
         String status = req.getParameter("status");
         String adminRemark = req.getParameter("adminRemark");
 
+        System.out.println("Servlet: complaintId = " + complaintId);
+        System.out.println("Servlet: status = " + status);
+        System.out.println("Servlet: adminRemark = " + adminRemark);
+
         boolean isUpdated = complaintBO.updateComplaintByAdmin(Integer.parseInt(complaintId), status, adminRemark);
         if (isUpdated) {
             resp.getWriter().write("Complaint updated successfully");

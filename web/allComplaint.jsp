@@ -838,7 +838,10 @@
                 <div class="complaint-actions">
                     <button class="action-btn btn-view" onclick="viewComplaint(<%= complaint.getComplaint_id() %>)">👁️ View</button>
                     <button class="action-btn btn-edit" onclick="editComplaint(<%= complaint.getComplaint_id() %>)">✏️ Edit</button>
-                    <button class="action-btn btn-delete" onclick="deleteComplaint(<%= complaint.getComplaint_id() %>)">🗑️ Delete</button>
+                    <form action="deleteComplaint" method="post">
+                        <input type="hidden" name="complaint_id" value="<%= complaint.getComplaint_id() %>">
+                        <button class="action-btn btn-delete" type="submit">🗑️ Delete</button>
+                    </form>
                 </div>
             </div>
             <%
@@ -918,7 +921,7 @@
             </div>
             <div class="form-group">
                 <label class="form-label">📝 Admin Remarks:</label>
-                <textarea class="form-textarea" id="complaintRemarks" name="remarks" placeholder="Add your administrative remarks here..."></textarea>
+                <textarea class="form-textarea" id="complaintRemarks" name="adminRemark" placeholder="Add your administrative remarks here..."></textarea>
             </div>
             <div class="modal-actions">
                 <button type="button" class="btn-secondary" onclick="closeEditModal()">Cancel</button>
