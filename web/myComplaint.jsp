@@ -1,4 +1,6 @@
-<%--
+<%@ page import="org.example.entity.Complaints" %>
+<%@ page import="java.util.List" %>
+<%@ page import="org.example.dto.ComplaintsDTO" %><%--
   Created by IntelliJ IDEA.
   User: Nethushi
   Date: 6/13/2025
@@ -758,7 +760,71 @@
 
       <!-- Complaints Grid -->
       <div class="complaints-grid" id="complaintsGrid">
-        <!-- Complaint cards will be generated here -->
+        <%
+          List<ComplaintsDTO> complaints = (List<ComplaintsDTO>) request.getAttribute("complaints");
+          System.out.println(complaints.size());
+          if (complaints.size() == 0) {
+            System.out.println("empty");
+        %>
+        <h1>No Complaints Found</h1>
+        <%
+        }else{
+          for (ComplaintsDTO complaint : complaints) {
+            System.out.println("kkkkkkkkkkkkkk");
+        %>
+        <!-- Sample Card 1 - Pending -->
+        <div class="complaint-card">
+          <div class="complaint-header">
+            <div>
+              <h4 class="complaint-title"><%=complaint.getTitle()%></h4>
+              <div class="complaint-id"><%=complaint.getComplaint_id()%></div>
+            </div>
+            <span class="status-badge status-pending">
+                    <span>⏳</span>
+                    <span><%=complaint.getStatus()%></span>
+                </span>
+          </div>
+          <div class="complaint-meta">
+            <div class="meta-item">
+              <span>📅</span>
+              <span>Dec 15, 2024</span>
+            </div>
+            <div class="meta-item">
+              <span>⚡</span>
+              <span class="priority-high">🔴 <%=complaint.getPriority()%></span>
+            </div>
+          </div>
+          <div class="complaint-description">
+            <%=complaint.getDescription()%>
+          </div>
+          <div class="complaint-actions">
+            <button class="action-btn btn-view" onclick="viewComplaint(<%=complaint.getComplaint_id()%>)">
+              👁️ View
+            </button>
+            <%
+              // Only show edit and delete buttons if status is not "Resolved"
+              if (!"Resolved".equals(complaint.getStatus())) {
+
+                System.out.println(complaint.getStatus() + " " + "Resolved");
+            %>
+            <button class="action-btn btn-edit" onclick="editComplaint(<%=complaint.getComplaint_id()%>)">
+              ✏️ Edit
+            </button>
+            <form action="deleteComplaint" method="post">
+              <input type="hidden" name="complaint_id" value="<%=complaint.getComplaint_id()%>">
+              <button type="submit" class="action-btn btn-delete" name="deleteComplaint">
+                🗑️ Delete
+              </button>
+            </form>
+            <%
+              }
+            %>
+          </div>
+        </div>
+        <%
+            }
+          }
+        %>
       </div>
 
       <!-- Empty State -->
@@ -782,24 +848,32 @@
       <span class="close" onclick="closeEditModal()">×</span>
     </div>
     <div class="modal-body">
-      <form id="editForm">
+      <form id="editForm" action="ViewAndEditComplaint" method="post">
         <div class="form-group">
           <label class="form-label">Complaint ID</label>
-          <input type="text" id="editId" class="form-input" readonly>
+          <input type="text" id="editId" class="form-input" name="complaint_id" readonly>
         </div>
         <div class="form-group">
           <label class="form-label">Title *</label>
-          <input type="text" id="editTitle" class="form-input" required>
+          <input name="title" type="text" id="editTitle" class="form-input" required>
         </div>
         <div class="form-group">
           <label class="form-label">Description *</label>
-          <textarea id="editDescription" class="form-textarea" rows="5" required></textarea>
+          <textarea id="editDescription" name="description" class="form-textarea" rows="5" required></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Priority *</label>
+          <select id="editPriority" name="priority" class="form-select" required>
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+            <option value="Low">Low</option>
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" onclick="closeEditModal()">Cancel</button>
+          <button type="submit" class="btn-primary" >Save Changes</button>
         </div>
       </form>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn-secondary" onclick="closeEditModal()">Cancel</button>
-      <button type="button" class="btn-primary" onclick="saveEdit()">Save Changes</button>
     </div>
   </div>
 </div>
@@ -812,10 +886,12 @@
       <span class="close" onclick="closeViewModal()">×</span>
     </div>
     <div class="modal-body">
+
       <div class="view-detail">
         <span class="view-label">Complaint ID:</span>
         <div class="view-value" id="viewId"></div>
       </div>
+
       <div class="view-detail">
         <span class="view-label">Title:</span>
         <div class="view-value" id="viewTitle"></div>

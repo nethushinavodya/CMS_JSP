@@ -31,7 +31,7 @@ public class ComplaintBOImpl implements ComplaintBO {
         List<Complaints> complaints = complaintDAO.getAllComplaints(username);
         List<ComplaintsDTO> complaintsDTO = new ArrayList<>();
         for (Complaints c : complaints) {
-            complaintsDTO.add(new ComplaintsDTO(c.getComplaint_id(),c.getTitle(),c.getDescription(),c.getPriority(),c.getStatus(),c.getAdminRemark(),c.getEmployee().getUsername()));
+            complaintsDTO.add(new ComplaintsDTO(c.getComplaint_id(),c.getTitle(),c.getDescription(),c.getStatus(),c.getPriority(),c.getAdminRemark(),c.getEmployee().getUsername()));
         }
         return complaintsDTO;
     }

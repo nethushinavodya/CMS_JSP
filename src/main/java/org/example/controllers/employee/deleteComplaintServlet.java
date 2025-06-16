@@ -27,6 +27,7 @@ public class deleteComplaintServlet extends HttpServlet {
         boolean isDeleted = complaintBO.deleteComplaint(Integer.parseInt(complaintId));
         if (isDeleted) {
             resp.getWriter().write("Complaint deleted successfully");
+            resp.sendRedirect("ViewAndEditComplaint");
         } else {
             resp.getWriter().write("Delete failed");
         }

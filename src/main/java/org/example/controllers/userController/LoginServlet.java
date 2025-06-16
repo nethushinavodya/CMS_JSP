@@ -38,12 +38,14 @@ public class LoginServlet extends HttpServlet {
             context.setAttribute("username", username);
             HttpSession session = req.getSession();
             session.setAttribute("username", username);
+            session.setAttribute("role", role);
             resp.sendRedirect( "employeeDashboard.jsp?username=" + username + "&role=" + role);
         } else if (role.equals("Admin")) {
             ServletContext context = req.getServletContext();
             context.setAttribute("username", username);
             HttpSession session = req.getSession();
             session.setAttribute("username", username);
+            session.setAttribute("role", role);
             resp.sendRedirect("adminDashboard.jsp");
         } else {
             resp.sendRedirect( "index.jsp?error=invalid");

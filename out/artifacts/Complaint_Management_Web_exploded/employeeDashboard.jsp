@@ -1,4 +1,4 @@
-<%--
+<%@ page import="org.hibernate.Session" %><%--
   Created by IntelliJ IDEA.
   User: Nethushi
   Date: 6/13/2025
@@ -379,9 +379,11 @@
 </head>
 <body>
 <%
-    String username = request.getParameter("username");
-    String role = request.getParameter("role");
-    System.out.println(username + " xxxxx  " + role);
+    String username = (String) session.getAttribute("username");
+    String role = (String) session.getAttribute("role");
+
+    System.out.println("JSP: username: " + username);
+    System.out.println("JSP: role: " + role);
 %>
 <!-- Header -->
 <header class="header">
@@ -450,7 +452,7 @@
             <p class="card-description">
                 View all your submitted complaints, track their status, and see responses from the administration.
             </p>
-            <a href="myComplaint.jsp" class="card-action">
+            <a href="ViewAndEditComplaint" class="card-action">
                 👁️ View Complaints
             </a>
         </div>

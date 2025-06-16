@@ -5,6 +5,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.example.bo.BOFactory;
 import org.example.bo.custom.ComplaintBO;
 import org.example.dto.ComplaintsDTO;
@@ -17,24 +18,26 @@ public class ViewComplaintServlet extends HttpServlet {
     ComplaintBO complaintBO = (ComplaintBO) BOFactory.getInstance().getBO(BOFactory.BOType.COMPLAINTS);
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String username = req.getParameter("username");
+        HttpSession session = req.getSession();
+        String username = session.getAttribute("username").toString();
         System.out.println("Servlet: Username = " + username);
+
 
         if (username != null && !username.isEmpty()) {
             List<ComplaintsDTO> complaints = complaintBO.getAllComplaints(username);
             req.setAttribute("complaints", complaints);
-            req.getRequestDispatcher("/myComplaints.jsp").forward(req, resp);
+            req.getRequestDispatcher("myComplaint.jsp").forward(req, resp);
         } else {
-            resp.sendRedirect("index.jsp");
+            resp.sendRedirect("employeeDashboard.jsp");
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        int complaintId = Integer.parseInt(req.getParameter("complaint_id"));
+        String complaintId = (req.getParameter("complaint_id"));
 
         //check the status resolved or not
-        String currentStatus = complaintBO.getComplaintStatus(complaintId);
+        String currentStatus = complaintBO.getComplaintStatus(Integer.parseInt((complaintId)));
         if (currentStatus.equals("Resolved")) {
             resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
             resp.getWriter().write("Complaint already resolved");
@@ -46,11 +49,12 @@ public class ViewComplaintServlet extends HttpServlet {
         String priority = req.getParameter("priority");
         String username = req.getParameter("username");
 
-        ComplaintsDTO complaintsDTO = new ComplaintsDTO(complaintId, title, description, null,priority, null, username);
+        ComplaintsDTO complaintsDTO = new ComplaintsDTO(Integer.parseInt(complaintId), title, description, null,priority, null, username);
 
         boolean isUpdated = complaintBO.updateComplaint(complaintsDTO);
         if (isUpdated) {
             resp.getWriter().write("Complaint updated successfully");
+            resp.sendRedirect("ViewAndEditComplaint");
         } else {
             resp.getWriter().write("Update failed");
         }

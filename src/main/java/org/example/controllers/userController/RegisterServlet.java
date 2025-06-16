@@ -4,10 +4,7 @@ import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.Part;
+import jakarta.servlet.http.*;
 import org.example.bo.BOFactory;
 import org.example.bo.custom.EmployeeBO;
 import org.example.dto.EmployeeDTO;
@@ -64,6 +61,9 @@ public class RegisterServlet extends HttpServlet {
         if (isRegistered) {
             ServletContext context = req.getServletContext();
             context.setAttribute("username", username);
+            HttpSession session = req.getSession();
+            session.setAttribute("username", username);
+            session.setAttribute("role", "Employee");
             System.out.println(username);
             resp.sendRedirect("employeeDashboard.jsp?username=" + username+"&role=Employee");
         }else {
