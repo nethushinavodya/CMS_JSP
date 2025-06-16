@@ -6,6 +6,8 @@ import org.example.dao.custom.EmployeeDAO;
 import org.example.entity.Employee;
 import org.hibernate.Session;
 
+import java.util.List;
+
 
 public class EmployeeDAOImpl implements EmployeeDAO {
     FactoryConfiguration factoryConfiguration = FactoryConfiguration.getInstance();

@@ -16,7 +16,6 @@ import java.util.List;
 
 public class Employee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int employee_id;
     private String fullName;
     private String address;
     @Id
@@ -30,8 +29,7 @@ public class Employee {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "employee")
     private List<Complaints> complaints;
 
-    public Employee(int id, String fullName, String address, String username, String email, String password,String confirmPassword, String profilePic, String role) {
-        this.employee_id = id;
+    public Employee( String fullName, String address, String username, String email, String password,String confirmPassword, String profilePic, String role) {
         this.fullName = fullName;
         this.address = address;
         this.username = username;

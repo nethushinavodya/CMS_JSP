@@ -45,7 +45,6 @@ public class RegisterServlet extends HttpServlet {
         part.write(uploadPath + File.separator + fileName);
 
         EmployeeDTO employeeDTO = new EmployeeDTO(
-                0,
                 fullName,
                 address,
                 username,

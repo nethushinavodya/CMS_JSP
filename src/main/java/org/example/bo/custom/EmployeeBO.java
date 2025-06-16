@@ -7,4 +7,6 @@ public interface EmployeeBO extends SuperBO {
     boolean register(EmployeeDTO employeeDTO);
 
     String login(String username, String password);
+
+    boolean addAdmin(EmployeeDTO employeeDTO);
 }

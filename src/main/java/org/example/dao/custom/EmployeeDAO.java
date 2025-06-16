@@ -7,4 +7,5 @@ public interface EmployeeDAO extends SuperDAO {
     boolean register(Employee employee);
 
     String login(String username, String password);
+
 }

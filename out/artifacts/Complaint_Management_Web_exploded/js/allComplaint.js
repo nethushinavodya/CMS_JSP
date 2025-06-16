@@ -95,16 +95,6 @@ function closeEditModal() {
     document.getElementById('editModal').style.display = 'none';
 }
 
-// Open edit modal from view modal
-function openEditFromView() {
-    const viewTitle = document.getElementById('viewTitle').textContent;
-    const complaint = complaintsData.find(c => c.title === viewTitle);
-    if (complaint) {
-        closeViewModal();
-        editComplaint(complaint.id);
-    }
-}
-
 // Delete complaint function
 function deleteComplaint(id) {
     if (confirm('Are you sure you want to delete this complaint? This action cannot be undone.')) {

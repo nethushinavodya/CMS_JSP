@@ -11,11 +11,18 @@ public class EmployeeBOImpl implements  EmployeeBO {
 
     @Override
     public boolean register(EmployeeDTO employeeDTO) {
-        return employeeDAO.register(new Employee(employeeDTO.getEmployee_id(),employeeDTO.getFullName(),employeeDTO.getAddress(),employeeDTO.getUsername(),employeeDTO.getEmail(),employeeDTO.getPassword(),employeeDTO.getConfirmPassword(),employeeDTO.getProfilePic(),employeeDTO.getRole()));
+        return employeeDAO.register(new Employee(employeeDTO.getFullName(),employeeDTO.getAddress(),employeeDTO.getUsername(),employeeDTO.getEmail(),employeeDTO.getPassword(),employeeDTO.getConfirmPassword(),employeeDTO.getProfilePic(),employeeDTO.getRole()));
     }
 
     @Override
     public String login(String username, String password) {
         return employeeDAO.login(username,password);
     }
+
+    @Override
+    public boolean addAdmin(EmployeeDTO employeeDTO) {
+        Employee employee = new Employee(employeeDTO.getFullName(), employeeDTO.getAddress(), employeeDTO.getUsername(), employeeDTO.getEmail(), employeeDTO.getPassword(), employeeDTO.getConfirmPassword(), employeeDTO.getProfilePic(), employeeDTO.getRole());
+        return employeeDAO.register(employee);
+    }
+
 }
