@@ -19,4 +19,6 @@ public interface ComplaintBO extends SuperBO {
     boolean deleteComplaint(int i);
 
     List<ComplaintsDTO> getAllComplaintForAdmin();
+
+    boolean updateComplaintByAdmin(int i, String status, String adminRemark);
 }

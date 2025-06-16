@@ -86,4 +86,16 @@ public class ComplaintDAOImpl implements ComplaintDAO {
         }
     }
 
+    @Override
+    public boolean updateComplaintByAdmin(int i, String status, String adminRemark) {
+        Session session = factoryConfiguration.getSession();
+        session.beginTransaction();
+        Complaints complaint = session.get(Complaints.class, i);
+        complaint.setStatus(status);
+        complaint.setAdminRemark(adminRemark);
+        session.update(complaint);
+        session.getTransaction().commit();
+        return true;
+    }
+
 }

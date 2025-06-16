@@ -94,5 +94,10 @@ public class ComplaintBOImpl implements ComplaintBO {
         return dtoList;
     }
 
+    @Override
+    public boolean updateComplaintByAdmin(int i, String status, String adminRemark) {
+        return complaintDAO.updateComplaintByAdmin(i,status,adminRemark);
+    }
+
 }
 

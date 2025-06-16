@@ -94,34 +94,6 @@ function editComplaint(id) {
 function closeEditModal() {
     document.getElementById('editModal').style.display = 'none';
 }
-// Handle edit form submission
-function handleEditSubmit(e) {
-    e.preventDefault();
-
-    const formData = new FormData(e.target);
-    const complaintId = formData.get('complaint_id');
-
-    // Update local data
-    const complaint = complaintsData.find(c => c.id == complaintId);
-    if (complaint) {
-        complaint.status = formData.get('status');
-        complaint.remarks = formData.get('remarks');
-
-        // Update the UI for the complaint card
-        const card = document.querySelector(`.complaint-card[data-id="${complaintId}"]`);
-        if (card) {
-            card.dataset.status = complaint.status;
-            const statusBadge = card.querySelector('.status-badge');
-            statusBadge.textContent = complaint.status.replace('_', ' ');
-            statusBadge.className = `status-badge status-${complaint.status.toLowerCase().replace('_', '-')}`;
-        }
-    }
-
-    closeEditModal();
-    showNotification('Complaint updated successfully', 'success');
-    updateStats();
-    filterComplaints(); // Reapply filters to ensure UI consistency
-}
 
 // Open edit modal from view modal
 function openEditFromView() {
@@ -162,40 +134,6 @@ function closeViewModal() {
 
 function closeEditModal() {
     document.getElementById('editModal').style.display = 'none';
-}
-
-// Handle edit form submission
-function handleEditSubmit(e) {
-    e.preventDefault();
-
-    const formData = new FormData(e.target);
-    const complaintId = formData.get('complaint_id');
-
-    // Update local data
-    const complaint = complaintsData.find(c => c.id == complaintId);
-    if (complaint) {
-        complaint.status = formData.get('status');
-        complaint.priority = formData.get('priority');
-        complaint.remarks = formData.get('remarks');
-
-        // Update the UI for the complaint card
-        const card = document.querySelector(`.complaint-card[data-id="${complaintId}"]`);
-        if (card) {
-            card.dataset.status = complaint.status;
-            card.dataset.priority = complaint.priority;
-            const statusBadge = card.querySelector('.status-badge');
-            const priorityBadge = card.querySelector('.priority-badge');
-            statusBadge.textContent = complaint.status.replace('_', ' ');
-            statusBadge.className = `status-badge status-${complaint.status.toLowerCase().replace('_', '-')}`;
-            priorityBadge.textContent = complaint.priority.charAt(0).toUpperCase() + complaint.priority.slice(1);
-            priorityBadge.className = `priority-badge priority-${complaint.priority}`;
-        }
-    }
-
-    closeEditModal();
-    showNotification('Complaint updated successfully', 'success');
-    updateStats();
-    filterComplaints(); // Reapply filters to ensure UI consistency
 }
 
 function filterComplaints() {

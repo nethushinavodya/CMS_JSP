@@ -901,7 +901,7 @@
             <h2 class="modal-title">Edit Complaint</h2>
             <span class="close" onclick="closeEditModal()">×</span>
         </div>
-        <form id="editForm" action="updateComplaint" method="post">
+        <form id="editForm" action="allComplaint" method="post">
             <input type="hidden" id="complaintId" name="complaint_id">
             <div class="form-group">
                 <label class="form-label">📋 Complaint Title:</label>

@@ -1,10 +1,7 @@
-<%--
-Created by IntelliJ IDEA.
-User: Nethushi
-Date: 6/14/2025
-Time: 7:38 PM
-To change this template use File | Settings | File Templates.
---%>
+<%@ page import="org.example.dto.ComplaintsDTO" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.time.LocalDate" %>
+<%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html lang="en">
 <head>
@@ -14,6 +11,7 @@ To change this template use File | Settings | File Templates.
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
     <style>
+        /* [Previous CSS unchanged, included for completeness] */
         * {
             margin: 0;
             padding: 0;
@@ -343,7 +341,7 @@ To change this template use File | Settings | File Templates.
             border: 1px solid rgba(255, 193, 7, 0.3);
         }
 
-        .status-progress {
+        .status-in-progress {
             background: rgba(33, 150, 243, 0.2);
             color: #2196f3;
             border: 1px solid rgba(33, 150, 243, 0.3);
@@ -353,6 +351,12 @@ To change this template use File | Settings | File Templates.
             background: rgba(76, 175, 80, 0.2);
             color: #4caf50;
             border: 1px solid rgba(76, 175, 80, 0.3);
+        }
+
+        .status-rejected {
+            background: rgba(220, 53, 69, 0.2);
+            color: #dc3545;
+            border: 1px solid rgba(220, 53, 69, 0.3);
         }
 
         .complaint-priority {
@@ -701,7 +705,6 @@ To change this template use File | Settings | File Templates.
             <div class="logo-icon">A</div>
             <div class="logo-text">Admin Portal</div>
         </div>
-        <!-- Actions Bar -->
         <div class="actions-bar">
             <a href="adminDashboard.jsp" class="back-link">
                 ← Back to Dashboard
@@ -721,19 +724,19 @@ To change this template use File | Settings | File Templates.
     <!-- Stats Bar -->
     <div class="stats-bar">
         <div class="stat-item">
-            <div class="stat-number" id="totalComplaints">23</div>
+            <div class="stat-number" id="totalComplaints">0</div>
             <div class="stat-label">Total Complaints</div>
         </div>
         <div class="stat-item">
-            <div class="stat-number" id="pendingCount">7</div>
+            <div class="stat-number" id="pendingCount">0</div>
             <div class="stat-label">Pending</div>
         </div>
         <div class="stat-item">
-            <div class="stat-number" id="progressCount">8</div>
+            <div class="stat-number" id="progressCount">0</div>
             <div class="stat-label">In Progress</div>
         </div>
         <div class="stat-item">
-            <div class="stat-number" id="resolvedCount">8</div>
+            <div class="stat-number" id="resolvedCount">0</div>
             <div class="stat-label">Resolved</div>
         </div>
     </div>
@@ -750,6 +753,7 @@ To change this template use File | Settings | File Templates.
                 <option value="PENDING">Pending</option>
                 <option value="IN_PROGRESS">In Progress</option>
                 <option value="RESOLVED">Resolved</option>
+                <option value="REJECTED">Rejected</option>
             </select>
             <select class="filter-select" id="priorityFilter">
                 <option value="">All Priority</option>
@@ -763,110 +767,84 @@ To change this template use File | Settings | File Templates.
     <!-- Complaints Container -->
     <div class="complaints-container">
         <div class="complaints-grid" id="complaintsGrid">
-            <!-- Sample complaints - replace with dynamic data -->
-            <div class="complaint-card" data-id="1" data-status="PENDING" data-priority="high">
+            <%
+                List<ComplaintsDTO> complaints = (List<ComplaintsDTO>) request.getAttribute("complaints");
+                if (complaints == null || complaints.isEmpty()) {
+            %>
+            <div class="empty-state" style="text-align: center; padding: 40px;">
+                <div class="empty-icon" style="font-size: 48px; color: #888;">📭</div>
+                <h3 style="color: #e0e0e0; font-size: 24px; margin: 20px 0;">No Complaints Found</h3>
+                <p style="color: #b0b0b0; font-size: 16px;">There are no complaints to display at the moment.</p>
+            </div>
+            <%
+            } else {
+                for (ComplaintsDTO complaint : complaints) {
+                    String statusClass = "";
+                    String statusIcon = "";
+                    switch (complaint.getStatus().toUpperCase()) {
+                        case "PENDING":
+                            statusClass = "status-pending";
+                            statusIcon = "⏳";
+                            break;
+                        case "IN_PROGRESS":
+                            statusClass = "status-in-progress";
+                            statusIcon = "🔄";
+                            break;
+                        case "RESOLVED":
+                            statusClass = "status-resolved";
+                            statusIcon = "✅";
+                            break;
+                        case "REJECTED":
+                            statusClass = "status-rejected";
+                            statusIcon = "❌";
+                            break;
+                    }
+            %>
+            <div class="complaint-card"
+                 data-id="<%= complaint.getComplaint_id() %>"
+                 data-status="<%= complaint.getStatus().toUpperCase() %>"
+                 data-priority="<%= complaint.getPriority().toLowerCase() %>"
+                 data-description="<%= complaint.getDescription() != null ? complaint.getDescription().replace("\"", "&quot;") : "" %>">
                 <div class="complaint-info">
                     <div class="complaint-main">
-                        <div class="complaint-title">Workplace Harassment Issue</div>
+                        <div class="complaint-title"><%= complaint.getTitle() %></div>
                         <div class="complaint-meta">
                             <span class="complaint-user">
                                 🔒 Anonymous User
                                 <span class="anonymous-badge">👤 Protected</span>
                             </span>
-                            <span class="complaint-date">📅 2025-06-10</span>
-                        </div>
-                    </div>
-                    <div class="complaint-status">
-                        <span class="status-badge status-pending">Pending</span>
-                    </div>
-                    <div class="complaint-priority">
-                        <span class="priority-badge priority-high">High</span>
-                    </div>
-                </div>
-                <div class="complaint-actions">
-                    <button class="action-btn btn-view" onclick="viewComplaint(1)">👁️ View</button>
-                    <button class="action-btn btn-edit" onclick="editComplaint(1)">✏️ Edit</button>
-                    <button class="action-btn btn-delete" onclick="deleteComplaint(1)">🗑️ Delete</button>
-                </div>
-            </div>
-
-            <div class="complaint-card" data-id="2" data-status="IN_PROGRESS" data-priority="medium">
-                <div class="complaint-info">
-                    <div class="complaint-main">
-                        <div class="complaint-title">Office Equipment Malfunction</div>
-                        <div class="complaint-meta">
-                            <span class="complaint-user">
-                                🔒 Anonymous User
-                                <span class="anonymous-badge">👤 Protected</span>
+                            <span class="complaint-date">
+                                <%=LocalDate.now() %>
                             </span>
-                            <span class="complaint-date">📅 2025-06-09</span>
+                        </div>
+                        <div class="admin-remarks" style="display: none;">
+                            <%= complaint.getAdminRemark() != null ? complaint.getAdminRemark().replace("\"", "&quot;") : "No remarks added yet." %>
                         </div>
                     </div>
                     <div class="complaint-status">
-                        <span class="status-badge status-progress">In Progress</span>
+                        <span class="status-badge <%= statusClass %>">
+                            <span><%= statusIcon %></span>
+                            <span><%= complaint.getStatus() %></span>
+                        </span>
                     </div>
                     <div class="complaint-priority">
-                        <span class="priority-badge priority-medium">Medium</span>
+                        <span class="priority-badge priority-<%= complaint.getPriority().toLowerCase() %>">
+                            <%= complaint.getPriority().equalsIgnoreCase("High") ? "🔴" :
+                                    complaint.getPriority().equalsIgnoreCase("Medium") ? "🟡" : "🟢" %>
+                            <%= complaint.getPriority() %>
+                        </span>
                     </div>
                 </div>
                 <div class="complaint-actions">
-                    <button class="action-btn btn-view" onclick="viewComplaint(2)">👁️ View</button>
-                    <button class="action-btn btn-edit" onclick="editComplaint(2)">✏️ Edit</button>
-                    <button class="action-btn btn-delete" onclick="deleteComplaint(2)">🗑️ Delete</button>
+                    <button class="action-btn btn-view" onclick="viewComplaint(<%= complaint.getComplaint_id() %>)">👁️ View</button>
+                    <button class="action-btn btn-edit" onclick="editComplaint(<%= complaint.getComplaint_id() %>)">✏️ Edit</button>
+                    <button class="action-btn btn-delete" onclick="deleteComplaint(<%= complaint.getComplaint_id() %>)">🗑️ Delete</button>
                 </div>
             </div>
-
-            <div class="complaint-card" data-id="3" data-status="RESOLVED" data-priority="low">
-                <div class="complaint-info">
-                    <div class="complaint-main">
-                        <div class="complaint-title">Break Room Cleanliness</div>
-                        <div class="complaint-meta">
-                            <span class="complaint-user">
-                                🔒 Anonymous User
-                                <span class="anonymous-badge">👤 Protected</span>
-                            </span>
-                            <span class="complaint-date">📅 2025-06-08</span>
-                        </div>
-                    </div>
-                    <div class="complaint-status">
-                        <span class="status-badge status-resolved">Resolved</span>
-                    </div>
-                    <div class="complaint-priority">
-                        <span class="priority-badge priority-low">Low</span>
-                    </div>
-                </div>
-                <div class="complaint-actions">
-                    <button class="action-btn btn-view" onclick="viewComplaint(3)">👁️ View</button>
-                    <button class="action-btn btn-edit" onclick="editComplaint(3)">✏️ Edit</button>
-                    <button class="action-btn btn-delete" onclick="deleteComplaint(3)">🗑️ Delete</button>
-                </div>
-            </div>
-
-            <div class="complaint-card" data-id="4" data-status="PENDING" data-priority="high">
-                <div class="complaint-info">
-                    <div class="complaint-main">
-                        <div class="complaint-title">Unsafe Working Conditions</div>
-                        <div class="complaint-meta">
-                            <span class="complaint-user">
-                                🔒 Anonymous User
-                                <span class="anonymous-badge">👤 Protected</span>
-                            </span>
-                            <span class="complaint-date">📅 2025-06-12</span>
-                        </div>
-                    </div>
-                    <div class="complaint-status">
-                        <span class="status-badge status-pending">Pending</span>
-                    </div>
-                    <div class="complaint-priority">
-                        <span class="priority-badge priority-high">High</span>
-                    </div>
-                </div>
-                <div class="complaint-actions">
-                    <button class="action-btn btn-view" onclick="viewComplaint(4)">👁️ View</button>
-                    <button class="action-btn btn-edit" onclick="editComplaint(4)">✏️ Edit</button>
-                    <button class="action-btn btn-delete" onclick="deleteComplaint(4)">🗑️ Delete</button>
-                </div>
-            </div>
+            <%
+                    }
+                }
+            %>
         </div>
     </div>
 </main>
@@ -900,19 +878,13 @@ To change this template use File | Settings | File Templates.
                     </div>
                 </div>
             </div>
-
             <div class="detail-section">
                 <h3 class="detail-title">📝 Description</h3>
-                <div class="detail-description" id="viewDescription">
-                    No description provided.
-                </div>
+                <div class="detail-description" id="viewDescription">No description provided.</div>
             </div>
-
             <div class="detail-section">
                 <h3 class="detail-title">💬 Admin Remarks</h3>
-                <div class="detail-remarks" id="viewRemarks">
-                    No remarks added yet.
-                </div>
+                <div class="detail-remarks" id="viewRemarks">No remarks added yet.</div>
             </div>
         </div>
         <div class="modal-actions">
@@ -929,28 +901,25 @@ To change this template use File | Settings | File Templates.
             <h2 class="modal-title">Edit Complaint</h2>
             <span class="close" onclick="closeEditModal()">×</span>
         </div>
-        <form id="editForm">
+        <form id="editForm" action="allComplaint" method="post">
             <input type="hidden" id="complaintId" name="complaint_id">
-
             <div class="form-group">
                 <label class="form-label">📋 Complaint Title:</label>
                 <input type="text" class="form-select" id="editTitle" name="title" readonly style="background: rgba(60, 60, 60, 0.5);">
             </div>
-
             <div class="form-group">
                 <label class="form-label">🏷️ Status:</label>
                 <select class="form-select" id="complaintStatus" name="status">
                     <option value="PENDING">Pending</option>
                     <option value="IN_PROGRESS">In Progress</option>
                     <option value="RESOLVED">Resolved</option>
+                    <option value="REJECTED">Rejected</option>
                 </select>
             </div>
-
             <div class="form-group">
                 <label class="form-label">📝 Admin Remarks:</label>
                 <textarea class="form-textarea" id="complaintRemarks" name="remarks" placeholder="Add your administrative remarks here..."></textarea>
             </div>
-
             <div class="modal-actions">
                 <button type="button" class="btn-secondary" onclick="closeEditModal()">Cancel</button>
                 <button type="submit" class="btn-primary">💾 Update Complaint</button>
@@ -959,7 +928,7 @@ To change this template use File | Settings | File Templates.
     </div>
 </div>
 
-<script src="js/allComplaint.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="js/allComplaint.js"></script>
 </body>
 </html>
