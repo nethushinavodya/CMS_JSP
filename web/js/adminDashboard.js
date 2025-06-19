@@ -87,12 +87,4 @@ function showAdminNotification(message, type = 'info') {
     // This could be expanded to show admin notifications
     console.log(`Admin Notification [${type.toUpperCase()}]: ${message}`);
 }
-
-// Check for urgent Complaints (placeholder)
-function checkUrgentComplaints() {
-    // This would typically fetch data from server
-    // showAdminNotification('No urgent Complaints at this time', 'success');
-}
-
-// Initialize admin checks
 setTimeout(checkUrgentComplaints, 2000);

@@ -1,4 +1,3 @@
-// Add some interactive animations
 document.addEventListener('DOMContentLoaded', function() {
     // Animate stat numbers
     const statNumbers = document.querySelectorAll('.stat-number');
