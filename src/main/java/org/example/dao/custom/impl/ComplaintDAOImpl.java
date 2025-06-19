@@ -98,4 +98,13 @@ public class ComplaintDAOImpl implements ComplaintDAO {
         return true;
     }
 
+    @Override
+    public boolean deleteEmployeeComplaint(int i) {
+        Session session = factoryConfiguration.getSession();
+        session.beginTransaction();
+        session.delete(session.get(Complaints.class, i));
+        session.getTransaction().commit();
+        return true;
+    }
+
 }

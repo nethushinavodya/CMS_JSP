@@ -838,7 +838,7 @@
                 <div class="complaint-actions">
                     <button class="action-btn btn-view" onclick="viewComplaint(<%= complaint.getComplaint_id() %>)">👁️ View</button>
                     <button class="action-btn btn-edit" onclick="editComplaint(<%= complaint.getComplaint_id() %>)">✏️ Edit</button>
-                    <form action="deleteComplaint" method="post">
+                    <form action="AdminDeleteComplaint" method="post">
                         <input type="hidden" name="complaint_id" value="<%= complaint.getComplaint_id() %>">
                         <button class="action-btn btn-delete" type="submit">🗑️ Delete</button>
                     </form>

@@ -10,14 +10,14 @@ import org.example.bo.custom.ComplaintBO;
 
 import java.io.IOException;
 
-@WebServlet(name = "deleteComplaintServlet", value = "/deleteComplaint")
-public class deleteComplaintServlet extends HttpServlet {
+@WebServlet(name = "deleteEmployeeComplaintServlet", value = "/deleteEmployeeComplaint")
+public class deleteEmployeeComplaintServlet extends HttpServlet {
     ComplaintBO complaintBO = (ComplaintBO) BOFactory.getInstance().getBO(BOFactory.BOType.COMPLAINTS);
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String complaintId = req.getParameter("complaint_id");
-
+        System.out.println(complaintId);
         String currentStatus = complaintBO.getComplaintStatus(Integer.parseInt(complaintId));
         if (currentStatus.equals("Resolved")) {
             resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -25,6 +25,7 @@ public class deleteComplaintServlet extends HttpServlet {
             return;
         }
         boolean isDeleted = complaintBO.deleteComplaint(Integer.parseInt(complaintId));
+        System.out.println(isDeleted + " isDeleted");
         if (isDeleted) {
             resp.getWriter().write("Complaint deleted successfully");
             resp.sendRedirect("ViewAndEditComplaint");

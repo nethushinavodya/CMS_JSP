@@ -99,5 +99,10 @@ public class ComplaintBOImpl implements ComplaintBO {
         return complaintDAO.updateComplaintByAdmin(i,status,adminRemark);
     }
 
+    @Override
+    public boolean deleteEmployeeComplaint(int i) {
+        return complaintDAO.deleteEmployeeComplaint(i);
+    }
+
 }
 

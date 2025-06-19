@@ -22,4 +22,6 @@ public interface ComplaintDAO extends SuperDAO {
     List<Complaints> getAllEmployeeComplaints();
 
     boolean updateComplaintByAdmin(int i, String status, String adminRemark);
+
+    boolean deleteEmployeeComplaint(int i);
 }

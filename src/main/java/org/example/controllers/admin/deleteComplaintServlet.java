@@ -10,8 +10,8 @@ import org.example.bo.custom.ComplaintBO;
 
 import java.io.IOException;
 
-@WebServlet(name = "deleteComplaintServlet", value = "/deleteComplaint")
-public class deleteComplaint extends HttpServlet {
+@WebServlet(name = "deleteComplaintServlet", value = "/AdminDeleteComplaint")
+public class deleteComplaintServlet extends HttpServlet {
     ComplaintBO complaintBO = (ComplaintBO) BOFactory.getInstance().getBO(BOFactory.BOType.COMPLAINTS);
 
     @Override

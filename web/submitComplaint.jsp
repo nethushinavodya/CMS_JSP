@@ -408,7 +408,7 @@
         </div>
 
         <!-- Complaint Form -->
-        <form action="submitComplaint" method="post" id="complaintForm">
+        <form action="submitComplaint" method="post" id="complaintForm" onsubmit="submitForm(event)">
             <div class="form-group">
                 <label for="title">Complaint Title <span class="required">*</span></label>
                 <input type="text"
@@ -447,7 +447,7 @@
             </div>
 
             <div class="form-actions">
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" class="btn btn-primary" id="submitBtn" >
                     📤 Submit Complaint
                 </button>
             </div>
@@ -456,5 +456,20 @@
 
 <script src="js/submitComplaint.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
+<script>
+    function submitForm(event) {
+    event.preventDefault();
+    console.log("Form submitted");
+    Swal.fire({
+        icon: 'success',
+        title: 'Complaint Submitted',
+        text: 'Your complaint has been submitted successfully!',
+        confirmButtonColor: '#ff8c00'
+    }).then(function() {
+        document.getElementById('complaintForm').reset();
+    });
+}
+</script>
 </body>
 </html>
