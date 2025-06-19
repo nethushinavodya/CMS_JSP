@@ -408,7 +408,7 @@
         </div>
 
         <!-- Complaint Form -->
-        <form action="submitComplaint" method="post" id="complaintForm" onsubmit="submitForm(event)">
+        <form action="submitComplaint" method="post" id="complaintForm">
             <div class="form-group">
                 <label for="title">Complaint Title <span class="required">*</span></label>
                 <input type="text"
@@ -446,8 +446,8 @@
                 </div>
             </div>
 
-            <div class="form-actions">
-                <button type="submit" class="btn btn-primary" id="submitBtn" >
+            <div class="form-actions" >
+                <button type="submit" class="btn btn-primary" id="submitBtn">
                     📤 Submit Complaint
                 </button>
             </div>
@@ -458,18 +458,23 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
 <script>
-    function submitForm(event) {
-    event.preventDefault();
-    console.log("Form submitted");
-    Swal.fire({
-        icon: 'success',
-        title: 'Complaint Submitted',
-        text: 'Your complaint has been submitted successfully!',
-        confirmButtonColor: '#ff8c00'
-    }).then(function() {
-        document.getElementById('complaintForm').reset();
+    const submitBtn = document.getElementById('submitBtn');
+    submitBtn.addEventListener('click', function(event) {
+        event.preventDefault(); // prevent immediate submission
+
+        Swal.fire({
+            icon: 'success',
+            title: 'Complaint Submitted',
+            text: 'Your complaint has been submitted successfully!',
+            confirmButtonText: 'OK'
+        }).then(function(result) {
+            if (result.isConfirmed) {
+                // Submit the form manually after alert
+                document.getElementById('complaintForm').submit();
+            }
+        });
     });
-}
 </script>
+
 </body>
 </html>
