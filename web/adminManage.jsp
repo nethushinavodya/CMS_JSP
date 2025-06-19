@@ -603,7 +603,7 @@
             %>
             <tr>
                 <td>
-                    <img src="Uploads/<%= profilePic %>" alt="Profile" class="profile-pic">
+                    <img src="<%= request.getContextPath() %>/uploads/<%= profilePic %>" alt="Profile" class="profile-pic">
                 </td>
                 <td><%= fullName %></td>
                 <td><%= username %></td>

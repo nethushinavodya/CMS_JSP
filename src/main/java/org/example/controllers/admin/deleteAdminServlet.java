@@ -21,9 +21,9 @@ public class deleteAdminServlet extends HttpServlet {
         boolean isDeleted = employeeBO.deleteAdmin(username);
         if (isDeleted) {
             resp.getWriter().write("Admin deleted successfully");
-            resp.sendRedirect("adminManage.jsp");
+            resp.sendRedirect("adminManage");
         } else {
-            resp.sendRedirect("adminManage.jsp");
+            resp.sendRedirect("adminManage");
         }
     }
 }

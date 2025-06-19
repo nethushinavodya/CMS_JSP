@@ -1,10 +1,5 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: Nethushi
-  Date: 6/15/2025
-  Time: 11:48 PM
-  To change this template use File | Settings | File Templates.
---%>
+<%@ page import="java.util.List" %>
+<%@ page import="org.example.entity.Employee" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html lang="en">
 <head>
@@ -253,16 +248,6 @@
             display: flex;
             align-items: center;
             gap: 4px;
-        }
-
-        .btn-edit {
-            background: #4CAF50;
-            color: white;
-        }
-
-        .btn-edit:hover {
-            background: #45a049;
-            transform: translateY(-1px);
         }
 
         .btn-delete {
@@ -567,11 +552,17 @@
 
     <div class="stats-container">
         <div class="stat-card">
-            <div class="stat-number" id="totalAdmins">0</div>
+            <div class="stat-number" id="totalAdmins">
+                <%
+                    List<Employee> adminList = (List<Employee>) request.getAttribute("adminList");
+                    int totalAdmins = (adminList != null) ? adminList.size() : 0;
+                %>
+                <%= totalAdmins %>
+            </div>
             <div class="stat-label">Total Admins</div>
         </div>
         <div class="stat-card">
-            <div class="stat-number" id="activeAdmins">0</div>
+            <div class="stat-number" id="activeAdmins"><%= totalAdmins %></div>
             <div class="stat-label">Active Admins</div>
         </div>
         <div class="stat-card">
@@ -581,7 +572,7 @@
     </div>
 
     <div class="actions-bar">
-        <button class="add-btn" onclick="openModal('add')">
+        <button class="add-btn" onclick="openModal()">
             <i class="fas fa-plus"></i>
             Add New Admin
         </button>
@@ -596,27 +587,62 @@
                 <th>Username</th>
                 <th>Email</th>
                 <th>Address</th>
-                <th>Employee ID</th>
-                <th>Role</th>
                 <th>Actions</th>
             </tr>
             </thead>
             <tbody id="adminTableBody">
-            <!-- Admin data will be populated here -->
+            <%
+                if (adminList != null && !adminList.isEmpty()) {
+                    for (Employee employee : adminList) {
+                        // Null checks for employee fields
+                        String profilePic = employee.getProfilePic() != null ? employee.getProfilePic() : "default.jpg";
+                        String fullName = employee.getFullName() != null ? employee.getFullName() : "";
+                        String username = employee.getUsername() != null ? employee.getUsername() : "";
+                        String email = employee.getEmail() != null ? employee.getEmail() : "";
+                        String address = employee.getAddress() != null ? employee.getAddress() : "";
+            %>
+            <tr>
+                <td>
+                    <img src="<%= request.getContextPath() %>/uploads/<%= profilePic %>" alt="Profile" class="profile-pic">
+                </td>
+                <td><%= fullName %></td>
+                <td><%= username %></td>
+                <td><%= email %></td>
+                <td><%= address %></td>
+                <td class="action-buttons">
+                    <form action="deleteAdmin" method="post" style="display: inline-block;">
+                        <input type="hidden" name="username" value="<%= username %>">
+                        <button type="submit" class="btn btn-delete"
+                                onclick="return confirm('Are you sure you want to delete this admin?')">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            <%
+                }
+            } else {
+            %>
+            <tr>
+                <td colspan="6" style="text-align: center; color: #b0b0b0;">No admins found</td>
+            </tr>
+            <%
+                }
+            %>
             </tbody>
         </table>
     </div>
 </div>
 
-<!-- Modal for Add/Edit Admin -->
+<!-- Modal for Add Admin -->
 <div id="adminModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
             <h2 id="modalTitle">Add New Admin</h2>
-            <button class="close" onclick="closeModal()">&times;</button>
+            <button class="close" onclick="closeModal()">×</button>
         </div>
         <div class="modal-body">
-            <form id="adminForm">
+            <form id="adminForm" action="adminManage" method="post" enctype="multipart/form-data">
                 <div class="image-upload-container">
                     <div class="image-preview" id="imagePreview" onclick="document.getElementById('profilePic').click()">
                         <div class="placeholder-icon" id="placeholderIcon">
@@ -625,54 +651,55 @@
                         </div>
                         <img id="previewImg" src="" alt="Profile Preview" style="display: none;">
                     </div>
-                    <input type="file" id="profilePic" accept="image/*" style="display: none;" onchange="previewImage(event)">
+                    <input type="file" id="profilePic" accept="image/*" style="display: none;" name="profilePic"
+                           onchange="previewImage(event)">
                 </div>
 
                 <div class="form-group">
                     <label for="fullName">Full Name *</label>
-                    <input type="text" id="fullName" required>
+                    <input type="text" id="fullName" name="fullName" required>
                 </div>
 
                 <div class="form-group">
                     <label for="address">Address *</label>
-                    <textarea id="address" required placeholder="Enter complete address"></textarea>
+                    <textarea id="address" name="address" required placeholder="Enter complete address"></textarea>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
                         <label for="username">Username *</label>
-                        <input type="text" id="username" required>
+                        <input type="text" id="username" name="username" required>
                     </div>
                     <div class="form-group">
                         <label for="email">Email Address *</label>
-                        <input type="email" id="email" required>
+                        <input type="email" id="email" name="email" required>
                     </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="employeeId">Employee ID *</label>
-                    <input type="text" id="employeeId" required>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
                         <label for="password">Password *</label>
                         <div class="password-group">
-                            <input type="password" id="password" required>
+                            <input type="password" id="password" name="password" required>
                             <span class="password-toggle" onclick="togglePassword('password')">
-                                    <i class="fas fa-eye"></i>
-                                </span>
+                                <i class="fas fa-eye"></i>
+                            </span>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="confirmPassword">Confirm Password *</label>
                         <div class="password-group">
-                            <input type="password" id="confirmPassword" required>
+                            <input type="password" id="confirmPassword" name="confirmPassword" required>
                             <span class="password-toggle" onclick="togglePassword('confirmPassword')">
-                                    <i class="fas fa-eye"></i>
-                                </span>
+                                <i class="fas fa-eye"></i>
+                            </span>
                         </div>
                     </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="role">Role *</label>
+                    <input type="text" id="role" name="role" value="Admin" readonly>
                 </div>
 
                 <div class="form-actions">
@@ -685,6 +712,7 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
 <script src="js/adminManage.js"></script>
 </body>
 </html>

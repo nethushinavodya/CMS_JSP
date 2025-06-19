@@ -60,9 +60,9 @@ public class adminManageServlet extends HttpServlet {
             HttpSession session = req.getSession();
             session.setAttribute("username", username);
             session.setAttribute("role", "Admin");
-            resp.sendRedirect("adminManage.jsp");
+            resp.sendRedirect("adminManage");
         } else {
-            resp.sendRedirect("adminDashboard.jsp");
+            resp.sendRedirect("adminDashboard");
         }
     }
 
