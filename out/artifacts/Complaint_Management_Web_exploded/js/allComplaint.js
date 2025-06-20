@@ -57,6 +57,7 @@ function viewComplaint(id) {
 
     // Show the modal
     document.getElementById('viewModal').style.display = 'block';
+
 }
 
 function closeViewModal() {
@@ -89,6 +90,7 @@ function editComplaint(id) {
 
     // Show the modal
     document.getElementById('editModal').style.display = 'block';
+
 }
 
 function closeEditModal() {

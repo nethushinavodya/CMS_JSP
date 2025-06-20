@@ -46,7 +46,6 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(function() {
             submitBtn.innerHTML = '📤 Submit Complaint';
             submitBtn.disabled = false;
-            alert('Complaint submitted successfully!');
             form.reset();
         }, 2000);
 

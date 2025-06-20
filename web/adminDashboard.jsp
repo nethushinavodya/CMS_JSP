@@ -424,19 +424,19 @@
     <!-- Stats Section -->
     <div class="stats-section">
         <div class="stat-card">
-            <div class="stat-number">0</div>
+            <div class="stat-number">4</div>
             <div class="stat-label">Total Complaints</div>
         </div>
         <div class="stat-card">
-            <div class="stat-number">0</div>
+            <div class="stat-number">2</div>
             <div class="stat-label">Pending Reviews</div>
         </div>
         <div class="stat-card">
-            <div class="stat-number">0</div>
+            <div class="stat-number">1</div>
             <div class="stat-label">Resolved Today</div>
         </div>
         <div class="stat-card">
-            <div class="stat-number">0</div>
+            <div class="stat-number">1</div>
             <div class="stat-label">Active Users</div>
         </div>
     </div>

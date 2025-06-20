@@ -742,134 +742,133 @@
       </div>
     </div>
 
-    <!-- Complaints Container -->
-    <div class="complaints-container">
-      <div class="table-header">
-        <h3 class="table-title">
-          📝 Your Complaints
-        </h3>
-        <div class="filter-controls">
-          <select class="filter-select" id="statusFilter">
-            <option value="">All Status</option>
-            <option value="PENDING">Pending</option>
-            <option value="IN_PROGRESS">In Progress</option>
-            <option value="RESOLVED">Resolved</option>
-            <option value="REJECTED">Rejected</option>
-          </select>
+<!-- Complaints Container -->
+<div class="complaints-container">
+  <div class="table-header">
+    <h3 class="table-title">
+      📝 Your Complaints
+    </h3>
+    <div class="filter-controls">
+      <select class="filter-select" id="statusFilter">
+        <option value="">All Status</option>
+        <option value="PENDING">Pending</option>
+        <option value="IN_PROGRESS">In Progress</option>
+        <option value="RESOLVED">Resolved</option>
+        <option value="REJECTED">Rejected</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Complaints Grid -->
+  <div class="complaints-grid" id="complaintsGrid">
+    <%
+      List<ComplaintsDTO> complaints = (List<ComplaintsDTO>) request.getAttribute("complaints");
+      if (complaints == null || complaints.isEmpty()) {
+    %>
+    <div class="empty-state" id="emptyState">
+      <div class="empty-icon">📭</div>
+      <h3 class="empty-title">No Complaints Found</h3>
+      <p class="empty-text">You haven't submitted any complaints yet.<br>Click "New Complaint" to get started.</p>
+      <button class="add-btn" onclick="window.location.href='submitComplaint.jsp'">
+        ➕ Submit Your First Complaint
+      </button>
+    </div>
+    <%
+    } else {
+      for (ComplaintsDTO complaint : complaints) {
+        String statusClass = "";
+        switch (complaint.getStatus().toUpperCase()) {
+          case "PENDING":
+            statusClass = "status-pending";
+            break;
+          case "IN_PROGRESS":
+            statusClass = "status-in-progress";
+            break;
+          case "RESOLVED":
+            statusClass = "status-resolved";
+            break;
+          case "REJECTED":
+            statusClass = "status-rejected";
+            break;
+        }
+    %>
+    <!-- Complaint Card -->
+    <div class="complaint-card" data-priority="<%= complaint.getPriority().trim() %>"
+         data-status="<%= complaint.getStatus() %>" >
+      <div class="complaint-header">
+        <div>
+          <h4 class="complaint-title"><%= complaint.getTitle() %></h4>
+          <div class="complaint-id"><%= complaint.getComplaint_id() %></div>
+        </div>
+        <span class="status-badge <%= statusClass %>">
+    <span>
+      <%
+        switch (complaint.getStatus().toUpperCase()) {
+          case "PENDING":
+            System.out.println("⏳");
+            break;
+          case "IN_PROGRESS":
+            System.out.println("🔄");
+            break;
+          case "RESOLVED":
+            System.out.println("✅");
+            break;
+          case "REJECTED":
+            System.out.println("❌");
+            break;
+        }
+      %>
+    </span>
+    <span><%= complaint.getStatus() %></span>
+  </span>
+      </div>
+      <div class="complaint-meta">
+        <div class="meta-item">
+          <span>📅</span>
+          <span><%= LocalDate.now()%></span>
+        </div>
+        <div class="meta-item">
+          <span>⚡</span>
+          <span class="priority-<%= complaint.getPriority().toLowerCase() %>">
+      <%= complaint.getPriority().equalsIgnoreCase("High") ? "🔴" :
+              complaint.getPriority().equalsIgnoreCase("Medium") ? "🟡" : "🟢" %>
+      <%= complaint.getPriority() %>
+    </span>
         </div>
       </div>
-
-      <!-- Complaints Grid -->
-      <div class="complaints-grid" id="complaintsGrid">
+      <div class="complaint-description">
+        <%= complaint.getDescription() %>
+      </div>
+      <div class="admin-remarks" style="display: none;">
+        <%= complaint.getAdminRemark() != null ? complaint.getAdminRemark() : "No admin remarks available." %>
+      </div>
+      <div class="complaint-actions">
+        <button class="action-btn btn-view" onclick="viewComplaint(<%= complaint.getComplaint_id() %>)">
+          👁️ View
+        </button>
         <%
-          List<ComplaintsDTO> complaints = (List<ComplaintsDTO>) request.getAttribute("complaints");
-          if (complaints == null || complaints.isEmpty()) {
+          if (!"RESOLVED".equalsIgnoreCase(complaint.getStatus()) && !"REJECTED".equalsIgnoreCase(complaint.getStatus())) {
         %>
-        <div class="empty-state" id="emptyState">
-          <div class="empty-icon">📭</div>
-          <h3 class="empty-title">No Complaints Found</h3>
-          <p class="empty-text">You haven't submitted any complaints yet.<br>Click "New Complaint" to get started.</p>
-          <button class="add-btn" onclick="window.location.href='submitComplaint.jsp'">
-            ➕ Submit Your First Complaint
+        <button class="action-btn btn-edit" onclick="editComplaint(<%= complaint.getComplaint_id() %>)">
+          ✏️ Edit
+        </button>
+        <form id="deleteForm_<%= complaint.getComplaint_id() %>" action="deleteEmployeeComplaint" method="post" style="display:inline;">
+          <input type="hidden" name="complaint_id" value="<%= complaint.getComplaint_id() %>">
+          <button type="button" class="action-btn btn-delete" onclick="confirmDelete(<%= complaint.getComplaint_id() %>)">
+            🗑️ Delete
           </button>
-        </div>
+        </form>
         <%
-        } else {
-          for (ComplaintsDTO complaint : complaints) {
-            String statusClass = "";
-            switch (complaint.getStatus().toUpperCase()) {
-              case "PENDING":
-                statusClass = "status-pending";
-                break;
-              case "IN_PROGRESS":
-                statusClass = "status-in-progress";
-                break;
-              case "RESOLVED":
-                statusClass = "status-resolved";
-                break;
-              case "REJECTED":
-                statusClass = "status-rejected";
-                break;
-            }
-        %>
-        <!-- Complaint Card -->
-        <div class="complaint-card">
-          <div class="complaint-header">
-            <div>
-              <h4 class="complaint-title"><%= complaint.getTitle() %></h4>
-              <div class="complaint-id"><%= complaint.getComplaint_id() %></div>
-            </div>
-            <span class="status-badge <%= statusClass %>">
-        <span>
-          <%
-            switch (complaint.getStatus().toUpperCase()) {
-              case "PENDING":
-                System.out.println("⏳");
-                break;
-              case "IN_PROGRESS":
-                System.out.println("🔄");
-                break;
-              case "RESOLVED":
-                System.out.println("✅");
-                break;
-              case "REJECTED":
-                System.out.println("❌");
-                break;
-            }
-          %>
-        </span>
-        <span><%= complaint.getStatus() %></span>
-      </span>
-          </div>
-          <div class="complaint-meta">
-            <div class="meta-item">
-              <span>📅</span>
-              <span><%= LocalDate.now()%></span>
-            </div>
-            <div class="meta-item">
-              <span>⚡</span>
-              <span class="priority-<%= complaint.getPriority().toLowerCase() %>">
-          <%= complaint.getPriority().equalsIgnoreCase("High") ? "🔴" :
-                  complaint.getPriority().equalsIgnoreCase("Medium") ? "🟡" : "🟢" %>
-          <%= complaint.getPriority() %>
-        </span>
-            </div>
-          </div>
-          <div class="complaint-description">
-            <%= complaint.getDescription() %>
-          </div>
-          <div class="admin-remarks" style="display: none;">
-            <%= complaint.getAdminRemark() != null ? complaint.getAdminRemark() : "No admin remarks available." %>
-          </div>
-          <div class="complaint-actions">
-            <button class="action-btn btn-view" onclick="viewComplaint(<%= complaint.getComplaint_id() %>)">
-              👁️ View
-            </button>
-            <%
-              if (!"RESOLVED".equalsIgnoreCase(complaint.getStatus()) && !"REJECTED".equalsIgnoreCase(complaint.getStatus())) {
-            %>
-            <button class="action-btn btn-edit" onclick="editComplaint(<%= complaint.getComplaint_id() %>)">
-              ✏️ Edit
-            </button>
-            <form action="deleteEmployeeComplaint" method="post">
-              <input type="hidden" name="complaint_id" value="<%= complaint.getComplaint_id() %>">
-              <button type="submit" class="action-btn btn-delete">
-                🗑️ Delete
-              </button>
-            </form>
-            <%
-              }
-            %>
-          </div>
-        </div>
-        <%
-            }
           }
         %>
       </div>
     </div>
-
-
+    <%
+        }
+      }
+    %>
+  </div>
+</div>
 
 <!-- Edit Modal -->
 <div id="editModal" class="modal">
@@ -902,7 +901,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn-secondary" onclick="closeEditModal()">Cancel</button>
-          <button type="submit" class="btn-primary" >Save Changes</button>
+          <button type="submit" class="btn-primary" id="updateBtn">Save Changes</button>
         </div>
       </form>
     </div>
@@ -960,5 +959,47 @@
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="js/myComplaint.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
+<script>
+  const updateBtn = document.getElementById('updateBtn');
+
+  if (updateBtn) {
+    updateBtn.addEventListener('click', function(event) {
+      event.preventDefault();
+
+      Swal.fire({
+        icon: 'question',
+        title: 'Save Changes?',
+        text: 'Are you sure you want to update this complaint?',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, Update',
+        cancelButtonText: 'Cancel',
+        confirmButtonColor: '#ff8c00',
+        cancelButtonColor: '#888'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          document.getElementById('editForm').submit();
+        }
+      });
+    });
+  }
+
+  function confirmDelete(complaintId) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Delete Complaint',
+      text: 'Are you sure you want to delete this complaint?',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Delete',
+      cancelButtonText: 'Cancel',
+      confirmButtonColor: '#ff8c00',
+      cancelButtonColor: '#888'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        document.getElementById('deleteForm_' + complaintId).submit();
+      }
+    });
+  }
+</script>
 </body>
 </html>

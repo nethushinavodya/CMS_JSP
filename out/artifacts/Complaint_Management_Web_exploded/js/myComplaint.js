@@ -7,22 +7,29 @@ const statusFilter = document.getElementById('statusFilter');
 
 // Function to open edit modal
 function editComplaint(complaintId) {
-    // Find the complaint card by ID
-    const card = Array.from(complaintsGrid.children).find(card =>
-        card.querySelector('.complaint-id').textContent == complaintId
+    const complaintsGrid = document.getElementById('complaintsGrid');
+
+    const card = Array.from(complaintsGrid.getElementsByClassName('complaint-card')).find(card =>
+        card.querySelector('.complaint-id').textContent.trim() == complaintId
     );
 
     if (card) {
-        // Extract data from the card
-        const title = card.querySelector('.complaint-title').textContent;
-        const description = card.querySelector('.complaint-description').textContent;
+        const title = card.querySelector('.complaint-title').textContent.trim();
+        const description = card.querySelector('.complaint-description').textContent.trim();
+        const priorityRaw = card.getAttribute('data-priority')?.trim().toLowerCase();
 
-        // Populate edit modal fields
+        console.log("Raw priority from data attribute:", priorityRaw);
+
+        let priority = 'High'; // default
+        if (priorityRaw === 'medium') priority = 'Medium';
+        else if (priorityRaw === 'low') priority = 'Low';
+
         document.getElementById('editId').value = complaintId;
         document.getElementById('editTitle').value = title;
         document.getElementById('editDescription').value = description;
+        document.getElementById('editPriority').value = priority;
 
-        editModal.style.display = 'block';
+        document.getElementById('editModal').style.display = 'block';
     } else {
         alert('Complaint not found.');
     }
@@ -61,8 +68,6 @@ function saveEdit() {
 }
 
 // Function to open view modal
-// Function to open view modal
-// Function to open view modal
 function viewComplaint(complaintId) {
     // Find the complaint card by ID
     const card = Array.from(complaintsGrid.children).find(card =>
@@ -73,38 +78,38 @@ function viewComplaint(complaintId) {
         // Extract data from the card
         const title = card.querySelector('.complaint-title').textContent;
         const description = card.querySelector('.complaint-description').textContent;
-        const status = card.querySelector('.status-badge span:last-child').textContent;
-        const date = card.querySelector('.meta-item span:last-child').textContent;
-        const priority = card.querySelector(`.priority-${status.toLowerCase()}`)?.textContent.replace(/[\u{1F534}\u{1F7E1}\u{1F7E2}]/u, '').trim() || 'N/A';
-        const adminRemarks = card.querySelector('.admin-remarks')?.textContent.trim() || 'No admin remarks available.';
+        const date = card.querySelector('.meta-item span:nth-child(2)').textContent;
+        const priority = card.getAttribute('data-priority');
+        const status = card.getAttribute('data-status');
+        const remarks = card.querySelector('.admin-remarks')?.textContent || 'No admin remarks available.';
 
         // Populate view modal fields
         document.getElementById('viewId').textContent = complaintId;
         document.getElementById('viewTitle').textContent = title;
         document.getElementById('viewDescription').textContent = description;
-        document.getElementById('viewStatus').textContent = status;
         document.getElementById('viewDate').textContent = date;
         document.getElementById('viewPriority').textContent = priority;
-        document.getElementById('viewAdminResponse').textContent = adminRemarks;
+        document.getElementById('viewStatus').textContent = status;
+        document.getElementById('viewAdminResponse').value = remarks;
 
-        // Show or hide admin response section based on whether remarks exist
-        const adminResponseSection = document.getElementById('adminResponseSection');
-        if (adminRemarks && adminRemarks !== 'No admin remarks available.') {
-            adminResponseSection.style.display = 'block';
-        } else {
-            adminResponseSection.style.display = 'none';
-        }
-
-        viewModal.style.display = 'block';
+        // Show the modal
+        document.getElementById('viewModal').style.display = 'block';
     } else {
         alert('Complaint not found.');
     }
 }
-// Function to close view modal
+
 function closeViewModal() {
-    viewModal.style.display = 'none';
+    document.getElementById('viewModal').style.display = 'none';
 }
 
+// Optional: Close modal if clicked outside
+window.onclick = function(event) {
+    const modal = document.getElementById('viewModal');
+    if (event.target == modal) {
+        modal.style.display = 'none';
+    }
+}
 // Function to delete complaint
 function deleteComplaint(complaintId) {
     if (confirm('Are you sure you want to delete this complaint?')) {

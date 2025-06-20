@@ -59,13 +59,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add admin-specific features
     console.log('Admin Dashboard Loaded Successfully');
 
-    // Simulate loading admin stats (replace with actual data)
-    setTimeout(() => {
-        document.querySelector('.stats-section .stat-number').textContent = '23';
-        document.querySelectorAll('.stats-section .stat-number')[1].textContent = '7';
-        document.querySelectorAll('.stats-section .stat-number')[2].textContent = '5';
-        document.querySelectorAll('.stats-section .stat-number')[3].textContent = '156';
-    }, 1000);
 });
 
 // Add smooth scrolling for anchor links
@@ -87,4 +80,3 @@ function showAdminNotification(message, type = 'info') {
     // This could be expanded to show admin notifications
     console.log(`Admin Notification [${type.toUpperCase()}]: ${message}`);
 }
-setTimeout(checkUrgentComplaints, 2000);

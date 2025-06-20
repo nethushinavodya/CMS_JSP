@@ -724,19 +724,19 @@
     <!-- Stats Bar -->
     <div class="stats-bar">
         <div class="stat-item">
-            <div class="stat-number" id="totalComplaints">0</div>
+            <div class="stat-number" id="totalComplaints">4</div>
             <div class="stat-label">Total Complaints</div>
         </div>
         <div class="stat-item">
-            <div class="stat-number" id="pendingCount">0</div>
+            <div class="stat-number" id="pendingCount">2</div>
             <div class="stat-label">Pending</div>
         </div>
         <div class="stat-item">
-            <div class="stat-number" id="progressCount">0</div>
+            <div class="stat-number" id="progressCount">1</div>
             <div class="stat-label">In Progress</div>
         </div>
         <div class="stat-item">
-            <div class="stat-number" id="resolvedCount">0</div>
+            <div class="stat-number" id="resolvedCount">1</div>
             <div class="stat-label">Resolved</div>
         </div>
     </div>
@@ -837,10 +837,10 @@
                 </div>
                 <div class="complaint-actions">
                     <button class="action-btn btn-view" onclick="viewComplaint(<%= complaint.getComplaint_id() %>)">👁️ View</button>
-                    <button class="action-btn btn-edit" onclick="editComplaint(<%= complaint.getComplaint_id() %>)">✏️ Edit</button>
+                    <button class="action-btn btn-edit"  onclick="editComplaint(<%= complaint.getComplaint_id() %>)">✏️ Edit</button>
                     <form action="AdminDeleteComplaint" method="post">
                         <input type="hidden" name="complaint_id" value="<%= complaint.getComplaint_id() %>">
-                        <button class="action-btn btn-delete" type="submit">🗑️ Delete</button>
+                        <button class="action-btn btn-delete" type="submit" onclick="return confirm('Are you sure you want to delete this admin?')">🗑️ Delete</button>
                     </form>
                 </div>
             </div>
@@ -892,7 +892,7 @@
         </div>
         <div class="modal-actions">
             <button type="button" class="btn-secondary" onclick="closeViewModal()">Close</button>
-            <button type="button" class="btn-primary" onclick="openEditFromView()">✏️ Edit Complaint</button>
+            <button type="button" class="btn-primary"  onclick="openEditFromView()">✏️ Edit Complaint</button>
         </div>
     </div>
 </div>
@@ -925,7 +925,7 @@
             </div>
             <div class="modal-actions">
                 <button type="button" class="btn-secondary" onclick="closeEditModal()">Cancel</button>
-                <button type="submit" class="btn-primary">💾 Update Complaint</button>
+                <button type="submit" class="btn-primary" id="updateBtn">💾 Update Complaint</button>
             </div>
         </form>
     </div>
@@ -933,5 +933,30 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="js/allComplaint.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
+<script>
+    const updateBtn = document.getElementById('updateBtn');
+
+    if (updateBtn) {
+        updateBtn.addEventListener('click', function(event) {
+            event.preventDefault();
+
+            Swal.fire({
+                icon: 'question',
+                title: 'Save Changes?',
+                text: 'Are you sure you want to update this complaint?',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, Update',
+                cancelButtonText: 'Cancel',
+                confirmButtonColor: '#ff8c00',
+                cancelButtonColor: '#888'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('editForm').submit();
+                }
+            });
+        });
+    }
+</script>
 </body>
 </html>

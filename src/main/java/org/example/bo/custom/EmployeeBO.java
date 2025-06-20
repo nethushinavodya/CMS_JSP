@@ -16,4 +16,6 @@ public interface EmployeeBO extends SuperBO {
     List<Employee> getEmployeesByRole(String role);
 
     boolean deleteAdmin(String username);
+
+    EmployeeDTO getEmployeeByUsername(String username);
 }

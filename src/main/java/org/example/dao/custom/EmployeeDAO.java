@@ -1,6 +1,7 @@
 package org.example.dao.custom;
 
 import org.example.dao.SuperDAO;
+import org.example.dto.EmployeeDTO;
 import org.example.entity.Employee;
 ;
 
@@ -14,4 +15,6 @@ public interface EmployeeDAO extends SuperDAO {
     List<Employee> getEmployeesByRole(String role);
 
     boolean deleteAdmin(String username);
+
+    Employee getEmployeeByUsername(String username);
 }

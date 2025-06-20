@@ -2,6 +2,7 @@ package org.example.dao.custom.impl;
 
 import org.example.config.FactoryConfiguration;
 import org.example.dao.custom.EmployeeDAO;
+import org.example.dto.EmployeeDTO;
 import org.example.entity.Employee;
 import org.hibernate.Session;
 
@@ -56,4 +57,15 @@ public class EmployeeDAOImpl implements EmployeeDAO {
         session.getTransaction().commit();
         return false;
     }
+
+    @Override
+    public Employee getEmployeeByUsername(String username) {
+        Session session = factoryConfiguration.getSession();
+        session.beginTransaction();
+        String sql = "FROM Employee WHERE username = :username";
+        Employee employee = session.createQuery(sql, Employee.class).setParameter("username", username).uniqueResult();
+        session.getTransaction().commit();
+        return employee;
+    }
+
 }

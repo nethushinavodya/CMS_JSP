@@ -37,4 +37,14 @@ public class EmployeeBOImpl implements  EmployeeBO {
        return employeeDAO.deleteAdmin(username);
 
     }
+
+    @Override
+    public EmployeeDTO getEmployeeByUsername(String username) {
+        Employee employee = employeeDAO.getEmployeeByUsername(username);
+        if (employee != null) {
+            return new EmployeeDTO(employee.getFullName(), employee.getAddress(), employee.getUsername(), employee.getEmail(), employee.getPassword(), employee.getConfirmPassword(), employee.getProfilePic(), employee.getRole());
+        } else {
+            return null;
+        }
+    }
 }
